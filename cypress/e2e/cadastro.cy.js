@@ -1,5 +1,5 @@
 ///<reference types="cypress"/>
-import { faker } from '@faker-js/faker'
+import { faker, Sex } from '@faker-js/faker'
 
 describe('Funcionalidade: Cadastro no Hub de Leitura', () => {
 
@@ -36,11 +36,25 @@ describe('Funcionalidade: Cadastro no Hub de Leitura', () => {
         cy.get('#confirm-password').type('teste@123')
         cy.get('#terms-agreement').check()
         cy.get('#register-btn').click()
-        
+
         cy.url().should('include', 'dashboard')
         cy.get('#user-name').should('contain', nome)
 
 
     });
 
+    it('Deve preencher Cadastro com sucesso - Usando comando customizado ', () => {
+        let email = `teste${Date.now()}@teste.com`
+        let nome =faker.person.fullName({sex:'female'})
+        let telefone =faker.phone.number()
+        cy.preencherCadastro(
+            nome,
+            email,
+            telefone,
+            'senha@123',
+            'senha@123',
+        )
+        cy.url().should('include', 'dashboard')
+             
+    });
 });
