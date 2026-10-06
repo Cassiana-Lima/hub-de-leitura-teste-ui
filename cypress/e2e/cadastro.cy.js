@@ -1,13 +1,18 @@
 ///<reference types="cypress"/>
 import { faker, Sex } from '@faker-js/faker'
+import cadastroPages from '../support/pages/cadastro-pages';
 
 describe('Funcionalidade: Cadastro no Hub de Leitura', () => {
 
     beforeEach(() => {
-        cy.visit('register.html')
+        cadastroPages.visitarPaginaCadastro()
     });
 
-    it('Deve fazer cadastro com sucesso usando funcao JS', () => {
+    afterEach(() => {
+        cy.screenshot()
+    });
+
+    it('Deve fazer cadastro com sucesso - Usando funcao JS', () => {
         let email = `teste${Date.now()}@teste.com`
 
         cy.get('#name').type('Cassiana Lima')
@@ -23,9 +28,7 @@ describe('Funcionalidade: Cadastro no Hub de Leitura', () => {
 
     });
 
-
-
-    it('Deve fazer cadastro com sucesso, usando Faker', () => {
+    it('Deve fazer cadastro com sucesso - Usando Faker', () => {
         let nome = faker.person.fullName()
         let email = faker.internet.email()
 
@@ -45,8 +48,8 @@ describe('Funcionalidade: Cadastro no Hub de Leitura', () => {
 
     it('Deve preencher Cadastro com sucesso - Usando comando customizado ', () => {
         let email = `teste${Date.now()}@teste.com`
-        let nome =faker.person.fullName({sex:'female'})
-        let telefone =faker.phone.number()
+        let nome = faker.person.fullName({ sex: 'female' })
+        let telefone = faker.phone.number()
         cy.preencherCadastro(
             nome,
             email,
@@ -55,6 +58,18 @@ describe('Funcionalidade: Cadastro no Hub de Leitura', () => {
             'senha@123',
         )
         cy.url().should('include', 'dashboard')
-             
+
     });
-});
+
+    it('Deve fazer cadastro com sucesso - Usando Pages Objects', () => {
+        let email = `teste${Date.now()}@teste.com`
+        cadastroPages.preencherCadastro('Cassiana Lima',email, '94836483', 'user123', 'user123',)
+        cy.url().should('include', 'dashboard')
+        })
+
+    it('Deve validar mensagem ao tentar cadastrar sem preencher nome', () => {
+        cadastroPages.preencherCadastro('','cassi@teste.com', '1122234', '123senha', '123senha')
+        cy.get(':nth-child(1) > .invalid-feedback').should('contain', 'Nome deve ter pelo menos 2 caracteres')
+        
+    });
+    });
