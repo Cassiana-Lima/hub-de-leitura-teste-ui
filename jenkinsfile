@@ -12,9 +12,10 @@ pipeline {
 
          stage ("Instalar dependencias do projeto") {
             steps {
-                dir('hub-de-leitura-integrado')
+                dir('hub-de-leitura-integrado') {
                     bat 'npm install'
                     bat 'npm start'
+                }
             }
         }
     }
