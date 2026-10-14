@@ -15,7 +15,7 @@ pipeline {
             steps {
                 dir('hub-de-leitura-integrado') {
                     bat 'npm install'
-                    bat 'npm /B npm start'
+                    bat 'npm npm start'
                 }
             }
         }
